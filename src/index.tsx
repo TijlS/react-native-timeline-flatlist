@@ -112,44 +112,44 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 			case "single-column-left":
 				circleStyle = isRtl
 					? {
-							width: this.state.width ? circleSize : 0,
-							height: this.state.width ? circleSize : 0,
+							width: width ? circleSize : 0,
+							height: width ? circleSize : 0,
 							borderRadius: circleSize / 2,
 							backgroundColor: circleColor,
 							right:
-								this.state.width -
+								width -
 								circleSize / 2 -
 								(lineWidth - 1) / 2,
 					  }
 					: {
-							width: this.state.x ? circleSize : 0,
-							height: this.state.x ? circleSize : 0,
+							width: x ? circleSize : 0,
+							height: x ? circleSize : 0,
 							borderRadius: circleSize / 2,
 							backgroundColor: circleColor,
 							left:
-								this.state.x -
+								x -
 								circleSize / 2 +
 								(lineWidth - 1) / 2,
 					  };
 				break;
 			case "single-column-right":
 				circleStyle = {
-					width: this.state.width ? circleSize : 0,
-					height: this.state.width ? circleSize : 0,
+					width: width ? circleSize : 0,
+					height: width ? circleSize : 0,
 					borderRadius: circleSize / 2,
 					backgroundColor: circleColor,
 					left:
-						this.state.width - circleSize / 2 - (lineWidth - 1) / 2,
+						width - circleSize / 2 - (lineWidth - 1) / 2,
 				};
 				break;
 			case "two-column":
 				circleStyle = {
-					width: this.state.width ? circleSize : 0,
-					height: this.state.width ? circleSize : 0,
+					width: width ? circleSize : 0,
+					height: width ? circleSize : 0,
 					borderRadius: circleSize / 2,
 					backgroundColor: circleColor,
 					left:
-						this.state.width - circleSize / 2 - (lineWidth - 1) / 2,
+						width - circleSize / 2 - (lineWidth - 1) / 2,
 				};
 				break;
 		}
@@ -242,13 +242,13 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		);
 	}
 
-	function _renderEvent(rowData: Data) {
+	function _renderEvent(rowData: Data, rowID) {
 		const lineWidth = rowData.lineWidth
 			? rowData.lineWidth
 			: props.lineWidth;
 		const isLast = props.renderFullLine
 			? !props.renderFullLine
-			: this.state.data.slice(-1)[0] === rowData;
+			: data.slice(-1)[0] === rowData;
 		const lineColor = isLast
 			? "rgba(0,0,0,0)"
 			: rowData.lineColor
@@ -305,9 +305,10 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					rowData.eventContainerStyle,
 				]}
 				onLayout={(evt) => {
-					if (!this.state.x && !this.state.width) {
-						const { x, width } = evt.nativeEvent.layout;
-						this.setState({ x, width });
+					if (!x && !width) {
+						const { x: newX, width: newWidth } = evt.nativeEvent.layout;
+						setX(newX)
+						setWidth(newWidth)
 					}
 				}}
 			>
@@ -319,9 +320,9 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					}
 				>
 					<View style={[styles.detail, props.eventDetailStyle]}>
-						{this.renderDetail(rowData, rowID)}
+						{renderDetail(rowData, rowID)}
 					</View>
-					{this._renderSeparator()}
+					{_renderSeparator()}
 				</TouchableOpacity>
 			</View>
 		);
@@ -378,7 +379,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 						style={[styles.rowContainer, props.rowContainerStyle]}
 					>
 						{renderTime(item)}
-						{renderEvent(item)}
+						{renderEvent(item, index)}
 						{renderCircle(item)}
 					</View>
 				);
@@ -388,7 +389,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					<View
 						style={[styles.rowContainer, props.rowContainerStyle]}
 					>
-						{renderEvent(item)}
+						{renderEvent(item, index)}
 						{renderTime(item)}
 						{renderCircle(item)}
 					</View>
@@ -405,7 +406,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 							]}
 						>
 							{renderTime(item)}
-							{renderEvent(item)}
+							{renderEvent(item, index)}
 							{renderCircle(item)}
 						</View>
 					) : (
@@ -443,7 +444,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					style={[styles.listview, props.listViewStyle]}
 					contentContainerStyle={props.listViewContainerStyle}
 					data={data}
-					extraData={this.state}
+					extraData={x}
 					renderItem={_renderItem}
 					keyExtractor={(item, index) => index + ""}
 					{...props.options}
