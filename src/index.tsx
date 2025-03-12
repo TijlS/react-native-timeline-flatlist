@@ -74,15 +74,28 @@ interface TimelineProps {
 	options?: Partial<FlatListProps<Data>>;
 	showTime?: boolean;
 	isUsingFlatlist?: boolean;
+	isAllowFontScaling: boolean;
 }
 
-const Timeline = memo(function Timeline(props: TimelineProps) {
+const Timeline = memo(function Timeline({
+	circleSize = defaultCircleSize,
+	circleColor = defaultCircleColor,
+	lineWidth = defaultLineWidth,
+	lineColor = defaultLineColor,
+	innerCircle = defaultInnerCircle,
+	columnFormat = "single-column-left",
+	separator = false,
+	showTime = true,
+	isAllowFontScaling = true,
+	isUsingFlatlist = true,
+	...props
+}: TimelineProps) {
 	const [x, setX] = useState(0);
 	const [width, setWidth] = useState(0);
 	const [data, setData] = useState(props.data);
 
 	function _renderSeparator() {
-		if (!props.separator) {
+		if (!separator) {
 			return null;
 		}
 
@@ -90,64 +103,65 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 	}
 
 	function _renderCircle(rowData: Data, rowID: number) {
-		let circleSize = rowData.circleSize
+		let _circleSize = rowData.circleSize
 			? rowData.circleSize
-			: props.circleSize
-			? props.circleSize
+			: circleSize
+			? circleSize
 			: defaultCircleSize;
-		let circleColor = rowData.circleColor
+		let _circleColor = rowData.circleColor
 			? rowData.circleColor
-			: props.circleColor
-			? props.circleColor
+			: circleColor
+			? circleColor
 			: defaultCircleColor;
-		let lineWidth = rowData.lineWidth
+		let _lineWidth = rowData.lineWidth
 			? rowData.lineWidth
-			: props.lineWidth
-			? props.lineWidth
+			: lineWidth
+			? lineWidth
 			: defaultLineWidth;
 
 		let circleStyle: any = null;
 
-		switch (props.columnFormat) {
+		switch (columnFormat) {
 			case "single-column-left":
 				circleStyle = isRtl
 					? {
-							width: width ? circleSize : 0,
-							height: width ? circleSize : 0,
-							borderRadius: circleSize / 2,
-							backgroundColor: circleColor,
-							right: width - circleSize / 2 - (lineWidth - 1) / 2,
+							width: width ? _circleSize : 0,
+							height: width ? _circleSize : 0,
+							borderRadius: _circleSize / 2,
+							backgroundColor: _circleColor,
+							right:
+								width - _circleSize / 2 - (_lineWidth - 1) / 2,
 					  }
 					: {
-							width: x ? circleSize : 0,
-							height: x ? circleSize : 0,
-							borderRadius: circleSize / 2,
-							backgroundColor: circleColor,
-							left: x - circleSize / 2 + (lineWidth - 1) / 2,
+							width: x ? _circleSize : 0,
+							height: x ? _circleSize : 0,
+							borderRadius: _circleSize / 2,
+							backgroundColor: _circleColor,
+							left: x - _circleSize / 2 + (_lineWidth - 1) / 2,
 					  };
 				break;
 			case "single-column-right":
 				circleStyle = {
-					width: width ? circleSize : 0,
-					height: width ? circleSize : 0,
-					borderRadius: circleSize / 2,
-					backgroundColor: circleColor,
-					left: width - circleSize / 2 - (lineWidth - 1) / 2,
+					width: width ? _circleSize : 0,
+					height: width ? _circleSize : 0,
+					borderRadius: _circleSize / 2,
+					backgroundColor: _circleColor,
+					left: width - _circleSize / 2 - (_lineWidth - 1) / 2,
 				};
 				break;
 			case "two-column":
 				circleStyle = {
-					width: width ? circleSize : 0,
-					height: width ? circleSize : 0,
-					borderRadius: circleSize / 2,
-					backgroundColor: circleColor,
-					left: width - circleSize / 2 - (lineWidth - 1) / 2,
+					width: width ? _circleSize : 0,
+					height: width ? _circleSize : 0,
+					borderRadius: _circleSize / 2,
+					backgroundColor: _circleColor,
+					left: width - _circleSize / 2 - (_lineWidth - 1) / 2,
 				};
 				break;
 		}
 
 		var innerCircle: any = null;
-		switch (props.innerCircle) {
+		switch (innerCircle) {
 			case "icon":
 				let iconDefault = rowData.iconDefault
 					? rowData.iconDefault
@@ -163,8 +177,8 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 							? { uri: rowData.icon }
 							: rowData.icon;
 				let iconStyle = {
-					height: circleSize,
-					width: circleSize,
+					height: _circleSize,
+					width: _circleSize,
 				};
 				innerCircle = (
 					<Image
@@ -177,11 +191,11 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 				);
 				break;
 			case "dot":
-				const dotSize = props.dotSize ? props.dotSize : circleSize / 2;
+				const dotSize = props.dotSize ? props.dotSize : _circleSize / 2;
 				let dotStyle = {
 					height: dotSize,
 					width: dotSize,
-					borderRadius: circleSize / 4,
+					borderRadius: _circleSize / 4,
 					backgroundColor: rowData.dotColor
 						? rowData.dotColor
 						: props.dotColor
@@ -202,8 +216,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 	}
 
 	function _renderDetail(rowData: Data, rowID: number) {
-		const { isAllowFontScaling } = props;
-		let description;
+		let description: any;
 		if (typeof rowData.description === "string") {
 			description = (
 				<Text
@@ -235,24 +248,24 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 	}
 
 	function _renderEvent(rowData: Data, rowID: number) {
-		const lineWidth = rowData.lineWidth
+		const _lineWidth = rowData.lineWidth
 			? rowData.lineWidth
-			: props.lineWidth;
-		const isLast = props.renderFullLine
+			: lineWidth;
+		const _isLast = props.renderFullLine
 			? !props.renderFullLine
 			: data.slice(-1)[0] === rowData;
-		const lineColor = isLast
+		const _lineColor = _isLast
 			? "rgba(0,0,0,0)"
 			: rowData.lineColor
 			? rowData.lineColor
-			: props.lineColor;
+			: lineColor;
 		let opStyle: any = null;
 
-		switch (props.columnFormat) {
+		switch (columnFormat) {
 			case "single-column-left":
 				opStyle = {
-					borderColor: lineColor,
-					borderLeftWidth: lineWidth,
+					borderColor: _lineColor,
+					borderLeftWidth: _lineWidth,
 					borderRightWidth: 0,
 					marginLeft: 20,
 					paddingLeft: 20,
@@ -260,9 +273,9 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 				break;
 			case "single-column-right":
 				opStyle = {
-					borderColor: lineColor,
+					borderColor: _lineColor,
 					borderLeftWidth: 0,
-					borderRightWidth: lineWidth,
+					borderRightWidth: _lineWidth,
 					marginRight: 20,
 					paddingRight: 20,
 				};
@@ -272,16 +285,16 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					(rowData.position && rowData.position == "right") ||
 					(!rowData.position && rowID % 2 == 0)
 						? {
-								borderColor: lineColor,
-								borderLeftWidth: lineWidth,
+								borderColor: _lineColor,
+								borderLeftWidth: _lineWidth,
 								borderRightWidth: 0,
 								marginLeft: 20,
 								paddingLeft: 20,
 						  }
 						: {
-								borderColor: lineColor,
+								borderColor: _lineColor,
 								borderLeftWidth: 0,
-								borderRightWidth: lineWidth,
+								borderRightWidth: _lineWidth,
 								marginRight: 20,
 								paddingRight: 20,
 						  };
@@ -322,11 +335,11 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 	}
 
 	function _renderTime(rowData: Data, rowID: number) {
-		if (!props.showTime) {
+		if (!showTime) {
 			return null;
 		}
 		var timeWrapper: any = null;
-		switch (props.columnFormat) {
+		switch (columnFormat) {
 			case "single-column-left":
 				timeWrapper = {
 					alignItems: "flex-end",
@@ -348,7 +361,6 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 				};
 				break;
 		}
-		const { isAllowFontScaling } = props;
 		return (
 			<View style={timeWrapper}>
 				<View style={[styles.timeContainer, props.timeContainerStyle]}>
@@ -363,9 +375,9 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		);
 	}
 
-	function _renderItem({ item, index }: { item: Data, index: number }) {
+	function _renderItem({ item, index }: { item: Data; index: number }) {
 		let content: any = null;
-		switch (props.columnFormat) {
+		switch (columnFormat) {
 			case "single-column-left":
 				content = (
 					<View
@@ -430,7 +442,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 
 	return (
 		<View style={[styles.container, props.style]}>
-			{props.isUsingFlatlist ? (
+			{isUsingFlatlist ? (
 				<FlatList
 					style={[styles.listview, props.listViewStyle]}
 					contentContainerStyle={props.listViewContainerStyle}
