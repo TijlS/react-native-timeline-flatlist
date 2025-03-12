@@ -20,36 +20,41 @@ const defaultCircleSize = 16;
 const defaultCircleColor = "#007AFF";
 const defaultLineWidth = 2;
 const defaultLineColor = "#007AFF";
+const defaultLineStyle = "solid";
 const defaultTimeTextColor = "black";
 const defaultDotColor = "white";
 const defaultInnerCircle = "none";
 const isRtl = I18nManager.isRTL;
 
-type Data = {
-	time?: string;
-	title?: string;
-	description?: any;
+interface TimelineSharedStyleProps {
 	lineWidth?: number;
 	lineColor?: string;
-	eventContainerStyle?: StyleProp<ViewStyle>;
+	lineStyle?: "solid" | "dashed" | "dotted";
 	circleSize?: number;
 	circleColor?: string;
 	dotColor?: string;
+	titleStyle?: StyleProp<TextStyle>;
+	descriptionStyle?: StyleProp<TextStyle>;
+	eventContainerStyle?: StyleProp<ViewStyle>;
+}
+
+type Data = TimelineSharedStyleProps & {
+	time?: string;
+	title?: string;
+	description?: any;
+	eventContainerStyle?: StyleProp<ViewStyle>;
+		
 	icon?: string | React.ReactNode;
 	position?: "left" | "right";
 	iconDefault?: string;
 };
 
-interface TimelineProps {
+interface TimelineProps extends TimelineSharedStyleProps {
 	data: Data[] | any;
 	innerCircle?: "none" | "icon" | "dot" | "element";
 	separator?: boolean;
 	columnFormat?: "single-column-left" | "single-column-right" | "two-column";
-	lineWidth?: number;
-	lineColor?: string;
-	circleSize?: number;
-	circleColor?: string;
-	dotColor?: string;
+	
 	dotSize?: number;
 	iconDefault?: string | React.ReactNode;
 	style?: StyleProp<ViewStyle>;
@@ -57,12 +62,11 @@ interface TimelineProps {
 	listViewStyle?: StyleProp<ViewStyle>;
 	listViewContainerStyle?: StyleProp<ViewStyle>;
 	timeStyle?: StyleProp<TextStyle>;
-	titleStyle?: StyleProp<TextStyle>;
-	descriptionStyle?: StyleProp<TextStyle>;
+	
 	iconStyle?: StyleProp<ImageStyle>;
 	separatorStyle?: StyleProp<ViewStyle>;
 	rowContainerStyle?: StyleProp<ViewStyle>;
-	eventContainerStyle?: StyleProp<ViewStyle>;
+	
 	eventDetailStyle?: StyleProp<ViewStyle>;
 	timeContainerStyle?: StyleProp<ViewStyle>;
 	detailContainerStyle?: StyleProp<ViewStyle>;
@@ -82,6 +86,7 @@ const Timeline = memo(function Timeline({
 	circleColor = defaultCircleColor,
 	lineWidth = defaultLineWidth,
 	lineColor = defaultLineColor,
+	lineStyle = defaultLineStyle,
 	innerCircle = defaultInnerCircle,
 	columnFormat = "single-column-left",
 	separator = false,
@@ -195,7 +200,7 @@ const Timeline = memo(function Timeline({
 				let dotStyle = {
 					height: dotSize,
 					width: dotSize,
-					borderRadius: _circleSize / 4,
+					borderRadius: _circleSize / 2,
 					backgroundColor: rowData.dotColor
 						? rowData.dotColor
 						: props.dotColor
@@ -249,6 +254,7 @@ const Timeline = memo(function Timeline({
 
 	function _renderEvent(rowData: Data, rowID: number) {
 		const _lineWidth = rowData.lineWidth ? rowData.lineWidth : lineWidth;
+		const _lineStyle = rowData.lineStyle ? rowData.lineStyle : lineStyle;
 		const _isLast = props.renderFullLine
 			? !props.renderFullLine
 			: data.slice(-1)[0] === rowData;
@@ -266,6 +272,7 @@ const Timeline = memo(function Timeline({
 					borderLeftWidth: _lineWidth,
 					borderRightWidth: 0,
 					marginLeft: 20,
+					borderStyle: _lineStyle,
 					paddingLeft: 20,
 				};
 				break;
@@ -274,6 +281,7 @@ const Timeline = memo(function Timeline({
 					borderColor: _lineColor,
 					borderLeftWidth: 0,
 					borderRightWidth: _lineWidth,
+					borderStyle: _lineStyle,
 					marginRight: 20,
 					paddingRight: 20,
 				};
@@ -285,6 +293,7 @@ const Timeline = memo(function Timeline({
 						? {
 								borderColor: _lineColor,
 								borderLeftWidth: _lineWidth,
+								borderStyle: _lineStyle,
 								borderRightWidth: 0,
 								marginLeft: 20,
 								paddingLeft: 20,
@@ -293,6 +302,7 @@ const Timeline = memo(function Timeline({
 								borderColor: _lineColor,
 								borderLeftWidth: 0,
 								borderRightWidth: _lineWidth,
+								borderStyle: _lineStyle,
 								marginRight: 20,
 								paddingRight: 20,
 						  };
@@ -451,7 +461,7 @@ const Timeline = memo(function Timeline({
 					{...props.options}
 				/>
 			) : (
-				data.map((item, index) => (
+				data.map((item: Data, index: number) => (
 					<View key={index + ""}>{_renderItem({ item, index })}</View>
 				))
 			)}
