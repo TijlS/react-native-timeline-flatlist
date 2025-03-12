@@ -363,7 +363,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		);
 	}
 
-	function _renderItem({ item, index }) {
+	function _renderItem({ item, index }: { item: Data, index: number }) {
 		let content: any = null;
 		switch (props.columnFormat) {
 			case "single-column-left":
@@ -419,9 +419,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		return <View key={index}>{content}</View>;
 	}
 
-	const renderTime = (props.renderTime ? props.renderTime : _renderTime).bind(
-		this
-	);
+	const renderTime = props.renderTime ? props.renderTime : _renderTime;
 	const renderDetail = props.renderDetail
 		? props.renderDetail
 		: _renderDetail;
