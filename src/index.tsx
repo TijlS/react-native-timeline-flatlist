@@ -89,7 +89,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		return <View style={[styles.separator, props.separatorStyle]} />;
 	}
 
-	function _renderCircle(rowData: Data) {
+	function _renderCircle(rowData: Data, rowID: number) {
 		let circleSize = rowData.circleSize
 			? rowData.circleSize
 			: props.circleSize
@@ -116,20 +116,14 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 							height: width ? circleSize : 0,
 							borderRadius: circleSize / 2,
 							backgroundColor: circleColor,
-							right:
-								width -
-								circleSize / 2 -
-								(lineWidth - 1) / 2,
+							right: width - circleSize / 2 - (lineWidth - 1) / 2,
 					  }
 					: {
 							width: x ? circleSize : 0,
 							height: x ? circleSize : 0,
 							borderRadius: circleSize / 2,
 							backgroundColor: circleColor,
-							left:
-								x -
-								circleSize / 2 +
-								(lineWidth - 1) / 2,
+							left: x - circleSize / 2 + (lineWidth - 1) / 2,
 					  };
 				break;
 			case "single-column-right":
@@ -138,8 +132,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					height: width ? circleSize : 0,
 					borderRadius: circleSize / 2,
 					backgroundColor: circleColor,
-					left:
-						width - circleSize / 2 - (lineWidth - 1) / 2,
+					left: width - circleSize / 2 - (lineWidth - 1) / 2,
 				};
 				break;
 			case "two-column":
@@ -148,8 +141,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					height: width ? circleSize : 0,
 					borderRadius: circleSize / 2,
 					backgroundColor: circleColor,
-					left:
-						width - circleSize / 2 - (lineWidth - 1) / 2,
+					left: width - circleSize / 2 - (lineWidth - 1) / 2,
 				};
 				break;
 		}
@@ -209,7 +201,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		);
 	}
 
-	function _renderDetail(rowData: Data) {
+	function _renderDetail(rowData: Data, rowID: number) {
 		const { isAllowFontScaling } = props;
 		let description;
 		if (typeof rowData.description === "string") {
@@ -242,7 +234,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		);
 	}
 
-	function _renderEvent(rowData: Data, rowID) {
+	function _renderEvent(rowData: Data, rowID: number) {
 		const lineWidth = rowData.lineWidth
 			? rowData.lineWidth
 			: props.lineWidth;
@@ -306,9 +298,10 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 				]}
 				onLayout={(evt) => {
 					if (!x && !width) {
-						const { x: newX, width: newWidth } = evt.nativeEvent.layout;
-						setX(newX)
-						setWidth(newWidth)
+						const { x: newX, width: newWidth } =
+							evt.nativeEvent.layout;
+						setX(newX);
+						setWidth(newWidth);
 					}
 				}}
 			>
@@ -328,7 +321,7 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 		);
 	}
 
-	function _renderTime(rowData: Data) {
+	function _renderTime(rowData: Data, rowID: number) {
 		if (!props.showTime) {
 			return null;
 		}
@@ -378,9 +371,9 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 					<View
 						style={[styles.rowContainer, props.rowContainerStyle]}
 					>
-						{renderTime(item)}
+						{renderTime(item, index)}
 						{renderEvent(item, index)}
-						{renderCircle(item)}
+						{renderCircle(item, index)}
 					</View>
 				);
 				break;
@@ -390,8 +383,8 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 						style={[styles.rowContainer, props.rowContainerStyle]}
 					>
 						{renderEvent(item, index)}
-						{renderTime(item)}
-						{renderCircle(item)}
+						{renderTime(item, index)}
+						{renderCircle(item, index)}
 					</View>
 				);
 				break;
@@ -405,9 +398,9 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 								props.rowContainerStyle,
 							]}
 						>
-							{renderTime(item)}
+							{renderTime(item, index)}
 							{renderEvent(item, index)}
-							{renderCircle(item)}
+							{renderCircle(item, index)}
 						</View>
 					) : (
 						<View
@@ -416,9 +409,9 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 								props.rowContainerStyle,
 							]}
 						>
-							{renderEvent(item)}
-							{renderTime(item)}
-							{renderCircle(item)}
+							{renderEvent(item, index)}
+							{renderTime(item, index)}
+							{renderCircle(item, index)}
 						</View>
 					);
 				break;
@@ -429,12 +422,12 @@ const Timeline = memo(function Timeline(props: TimelineProps) {
 	const renderTime = (props.renderTime ? props.renderTime : _renderTime).bind(
 		this
 	);
-	const renderDetail = (
-		props.renderDetail ? props.renderDetail : _renderDetail
-	).bind(this);
-	const renderCircle = (
-		props.renderCircle ? props.renderCircle : _renderCircle
-	).bind(this);
+	const renderDetail = props.renderDetail
+		? props.renderDetail
+		: _renderDetail;
+	const renderCircle = props.renderCircle
+		? props.renderCircle
+		: _renderCircle;
 	const renderEvent = _renderEvent;
 
 	return (
