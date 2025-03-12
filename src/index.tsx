@@ -210,7 +210,7 @@ const Timeline = memo(function Timeline({
 		}
 		return (
 			<View style={[styles.circle, circleStyle, props.circleStyle]}>
-				{innerCircle}
+				{_innerCircle}
 			</View>
 		);
 	}
