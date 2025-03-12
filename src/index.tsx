@@ -74,7 +74,7 @@ interface TimelineProps {
 	options?: Partial<FlatListProps<Data>>;
 	showTime?: boolean;
 	isUsingFlatlist?: boolean;
-	isAllowFontScaling: boolean;
+	isAllowFontScaling?: boolean;
 }
 
 const Timeline = memo(function Timeline({
@@ -160,7 +160,7 @@ const Timeline = memo(function Timeline({
 				break;
 		}
 
-		var innerCircle: any = null;
+		var _innerCircle: any = null;
 		switch (innerCircle) {
 			case "icon":
 				let iconDefault = rowData.iconDefault
@@ -168,7 +168,7 @@ const Timeline = memo(function Timeline({
 					: props.iconDefault;
 				let iconSource = rowData.icon ? rowData.icon : iconDefault;
 				if (React.isValidElement(iconSource)) {
-					innerCircle = iconSource;
+					_innerCircle = iconSource;
 					break;
 				}
 				if (rowData.icon)
@@ -180,7 +180,7 @@ const Timeline = memo(function Timeline({
 					height: _circleSize,
 					width: _circleSize,
 				};
-				innerCircle = (
+				_innerCircle = (
 					<Image
 						source={iconSource}
 						defaultSource={
@@ -202,10 +202,10 @@ const Timeline = memo(function Timeline({
 						? props.dotColor
 						: defaultDotColor,
 				};
-				innerCircle = <View style={[styles.dot, dotStyle]} />;
+				_innerCircle = <View style={[styles.dot, dotStyle]} />;
 				break;
 			case "element":
-				innerCircle = rowData.icon;
+				_innerCircle = rowData.icon;
 				break;
 		}
 		return (
@@ -248,9 +248,7 @@ const Timeline = memo(function Timeline({
 	}
 
 	function _renderEvent(rowData: Data, rowID: number) {
-		const _lineWidth = rowData.lineWidth
-			? rowData.lineWidth
-			: lineWidth;
+		const _lineWidth = rowData.lineWidth ? rowData.lineWidth : lineWidth;
 		const _isLast = props.renderFullLine
 			? !props.renderFullLine
 			: data.slice(-1)[0] === rowData;
