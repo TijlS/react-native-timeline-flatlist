@@ -14,7 +14,7 @@ import {
 	View,
 	ViewStyle,
 } from "react-native";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 
 const defaultCircleSize = 16;
 const defaultCircleColor = "#007AFF";
@@ -438,6 +438,11 @@ const Timeline = memo(function Timeline({
 		}
 		return <View key={index}>{content}</View>;
 	}
+
+	useEffect(() => {
+		
+		setData(props.data)
+	}, [props.data])
 
 	const renderTime = props.renderTime ? props.renderTime : _renderTime;
 	const renderDetail = props.renderDetail
