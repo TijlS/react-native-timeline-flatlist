@@ -34,8 +34,8 @@
   },
   "homepage": "https://github.com/eugnis/react-native-timeline-flatlist",
   "devDependencies": {
-    "@types/react": "^19.0.10",
     "@babel/preset-env": "7.26.9",
+    "@types/react": "^19.0.10",
     "react": "^19.0.0",
     "react-native": "1000.0.0"
   }
