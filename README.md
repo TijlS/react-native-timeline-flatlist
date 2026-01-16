@@ -1,13 +1,13 @@
 # React Native Timeline Flatlist
 
 [![npm version](https://badge.fury.io/js/react-native-timeline-flatlist.svg)](https://badge.fury.io/js/react-native-timeline-flatlist)
-[![Platform](https://img.shields.io/badge/react--native-0.61-blue.svg)](http://facebook.github.io/react-native/)
+[![Platform](https://img.shields.io/badge/react--native-0.81-blue.svg)](http://facebook.github.io/react-native/)
 
 Timeline component for React Native App work for Android and iOS
 
 It's a fork of [react-native-timeline-listview](https://github.com/thegamenicorus/react-native-timeline-listview) with some updates including FlatList, because old ListView is deprecated.
 
-Examples in examples folder and on Expo https://expo.io/@eugnis/react-native-timeline-flatlist-examples
+Examples in examples folder
 
 [DEMO HERE](https://snack.expo.io/@eugnis/eaae28)
 
@@ -384,7 +384,9 @@ render(){
 | renderFullLine         | bool                                | false                      | render event border on last timeline item                        |
 | options                | object                              | null                       | ListView properties                                              |
 | showTime               | boolean                             | true                       | Time container options                                           |
-| isUsingFlatlist        | boolean                             | false                      | Render inner components in Flatlist (if false - render in View)  |
+| isUsingFlatlist        | boolean                             | true                       | Render inner components in Flatlist (if false - render in View)  |
+| columnSideMargin       | int                                 | 20                         | Custom event line side margin                                    |
+| columnSidePadding      | int                                 | 20                         | Custom event line side padding                                   |
 
 ## Shift problem
 
